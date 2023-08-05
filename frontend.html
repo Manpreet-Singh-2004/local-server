@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>File Upload and Download</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input[type="text"],
+        input[type="file"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+
+        input[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+
+        .download-links {
+            margin-top: 20px;
+        }
+
+        .download-links a {
+            display: block;
+            padding: 10px;
+            background-color: #f2f2f2;
+            margin-bottom: 5px;
+            text-decoration: none;
+            color: #333;
+        }
+
+        .download-links a .file-name {
+            float: left;
+            width: 70%;
+        }
+
+        .download-links a .file-icons {
+            float: right;
+            width: 30%;
+            text-align: right;
+        }
+
+        .download-links a .file-icons i {
+            margin-right: 5px;
+        }
+
+        .download-links a:hover {
+            background-color: #ddd;
+        }
+
+        /* Additional styling for mobile screens */
+        @media screen and (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+
+            input[type="text"],
+            input[type="file"],
+            input[type="submit"] {
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>File Upload and Download</h1>
+    <form action="/upload" method="post" enctype="multipart/form-data">
+        <label for="name">Your Name:</label>
+        <input type="text" id="name" name="name" required>
+        <label for="file">Select multiple files:</label>
+        <input type="file" id="file" name="file" required multiple>
+        <input type="submit" value="Upload">
+    </form>
+
+    <div class="download-links">
+        <h2>Download Files</h2>
+        <p>Enter your name to view and download your uploaded files.</p>
+        <form onsubmit="return viewFiles()">
+            <label for="download-name">Your Name:</label>
+            <input type="text" id="download-name" name="name" required>
+            <input type="submit" value="View Files">
+        </form>
+
+        <!-- Display download links here -->
+        <div id="download-links"></div>
+    </div>
+
+    <script>
+        function viewFiles() {
+            const name = document.getElementById("download-name").value;
+            fetch(`/download/${name}`)
+                .then(response => response.text())
+                .then(html => {
+                    document.getElementById("download-links").innerHTML = html;
+                })
+                .catch(error => console.error("Error:", error));
+            return false; // Prevent form submission
+        }
+    </script>
+</body>
+</html>
